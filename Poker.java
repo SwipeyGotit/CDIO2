@@ -21,4 +21,15 @@ class PokerKonto{
         return this.PlayerID;
     }
 
+    public void withdraw(int StartBalance){
+        this.balance -= StartBalance;
+        if(this.balance < 0){
+            this.balance = 0;
+        }
+    }
+
+    public void deposit(int StartBalance){
+        this.balance += StartBalance;
+    }
+
 }
