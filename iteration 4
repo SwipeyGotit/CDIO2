@@ -1,0 +1,96 @@
+class Player {
+    private String name;
+    private account account;
+    
+
+    
+    public Player(String name, int startMoney) {
+        this.name = name;
+        this.account = new account(startMoney);
+        this.turn = 0;
+    }
+
+    
+    public int throwDice() {
+        Random rand = new Random();
+        int die1 = rand.nextInt(6) + 1;
+        int die2 = rand.nextInt(6) + 1;
+        return die1 + die2;
+    }
+
+    
+    public boolean updateMoney(int account) {
+        if (account >= 0) {
+            return this.account.deposit(account);
+        } else {
+            return this.account.withdraw(-account); 
+        }
+    }
+
+    
+    public String getname() {
+        return name;
+    }
+
+    public int getMoney() {
+        return account.getBalance();
+    }
+
+    
+    public String toString() {
+        return name + " has " + account.getBalance() + " kr";
+    }
+}
+
+
+class account {
+    private int balance;
+
+    
+    public account(int startBalance) {
+        if (startBalance < 0) {
+            System.out.println("Start balance cannot be negative!");
+            this.balance = 0;
+        } else {
+            this.balance = startBalance;
+        }
+    }
+
+    
+    public int getBalance() {
+        return balance;
+    }
+
+   
+    public boolean deposit(int amount) {
+        if (amount < 0) {
+            return false; 
+        }
+        balance += amount;
+        return true;
+    }
+
+   
+    public boolean withdraw(int amount) {
+        if (balance < 0) {
+            balance = 0;
+        if (amount < 0) {
+            return false; 
+        }
+        if (balance - amount >= 0) {
+            balance -= amount;
+            return true;
+        } else {
+            return false; 
+        }
+        
+            
+        }
+    }
+
+    
+    
+    public String toString() {
+        return "account balance: " + balance + " kr.";
+    }
+}
