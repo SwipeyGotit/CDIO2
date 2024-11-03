@@ -1,0 +1,213 @@
+import java.util.Random;
+
+class game {
+    private Player player1;
+    private Player player2;
+
+    
+    public game(String name1, String name2) {
+        this.player1 = new Player(name1, 1000);
+        this.player2 = new Player(name2, 1000);
+    }
+
+    public static void main(String[] args) {
+
+        var scanner = new java.util.Scanner(System.in);
+        scanner.useLocale(java.util.Locale.ENGLISH);
+
+        System.out.println("Choose name Player 1");
+
+        String player1 = scanner.nextLine();
+
+        System.out.println("Choose name Player 2");
+        String player2 = scanner.nextLine();
+
+
+        game game = new game(player1, player2);
+        game.startgame();
+    }
+
+   
+    public void startgame() {
+        boolean gameOver = false;
+        Player activePlayer = player1;
+
+        var scanner = new java.util.Scanner(System.in);
+        scanner.useLocale(java.util.Locale.ENGLISH);
+
+        while (!gameOver) {
+            System.out.println("________________________________________");
+            System.out.println(activePlayer.getname() + "s turn:");
+            System.out.println("PRESS ENTER TO PLAY!");
+            scanner.nextLine(); 
+            int sum = 3;
+            System.out.println("You hit " + sum);
+
+            
+            gameOver = updateFelteffect(activePlayer, sum);
+            System.out.println(activePlayer.getname() + "s current balance: " + activePlayer.getMoney());
+            System.out.println("________________________________________");
+
+            
+            if (activePlayer.getMoney() >= 3000) {
+                System.out.println(activePlayer.getname() + " has won the game with a balance of " + activePlayer.getMoney() + "!");
+                gameOver = true;
+            } else {
+                if (sum != 10) {
+                    activePlayer = (activePlayer == player1) ? player2 : player1;
+                }
+            }
+        }
+    }
+
+    private boolean updateFelteffect(Player Player, int sum) {
+        String besked = "";
+        int ændring = 0;
+
+        switch (sum) {
+            case 2:
+                ændring = 250;
+                besked = "TOWER! You have recieved 250 kr.";
+                break;
+            case 3:
+                ændring = -100;
+                besked = "Ouff, Crater... You lose 100 kr.";
+                break;
+            case 4:
+                ændring = 100;
+                besked = "Pearly Palace Gates! That's 100 kr for you!";
+                break;
+            case 5:
+                ændring = -20;
+                besked = "Brrr, Cold Desert! You drop 20 kr while shaking";
+                break;
+            case 6:
+                ændring = 180;
+                besked = "HALT, Walled City! The toll officer pays you to leave... You feel conflicted. Plus 180";
+                break;
+            case 7:
+                ændring = 0;
+                besked = "The Monks asks you to leave, but in a not rude way.";
+                break;
+            case 8:
+                ændring = -70;
+                besked = "Man it's dark, no wonder they call it a Black Cave... Where's your wallet?... Minus 70.";
+                break;
+            case 9:
+                ændring = 60;
+                besked = "You find huts in the mountain, nobody's here though, no one to miss that sweet wallet. Plus 60.";
+                break;
+            case 10:
+                ændring = -80;
+                besked = "What a furry wall, perhaps a werewall! You feel strange and start running. Minus 80. Where do you run? Plus one turn!";
+                break;
+            case 11:
+                ændring = -50;
+                besked = "Oh oooh! It's the pit... You almost fall in and drop 50 kr... Better luck next time!";
+                break;
+            case 12:
+                ændring = 650;
+                besked = "GOLDMINE! A big sign says, do not plunder... Plus 650.";
+                break;
+        }
+
+        System.out.println(besked);
+        Player.updateMoney(ændring);
+        return false;
+    }
+
+
+class Player {
+    private String name;
+    private account account;
+    
+
+    
+    public Player(String name, int startMoney) {
+        this.name = name;
+        this.account = new account(startMoney);
+        
+    }
+
+    
+    public int throwDice() {
+        Random rand = new Random();
+        int die1 = rand.nextInt(6) + 1;
+        int die2 = rand.nextInt(6) + 1;
+        return die1 + die2;
+    }
+
+    
+    public boolean updateMoney(int account) {
+        if (account >= 0) {
+            return this.account.deposit(account);
+        } else {
+            return this.account.withdraw(-account); 
+        }
+    }
+
+    
+    public String getname() {
+        return name;
+    }
+
+    public int getMoney() {
+        return account.getBalance();
+    }
+
+
+    
+    public String toString() {
+        return name + " has " + account.getBalance() + " kr";
+    }
+}
+
+
+class account {
+    private int balance;
+
+    
+    public account(int startBalance) {
+        if (startBalance < 0) {
+            System.out.println("Start balance cannot be negative!");
+            this.balance = 0;
+        } else {
+            this.balance = startBalance;
+        }
+    }
+
+    
+    public int getBalance() {
+        return balance;
+    }
+
+   
+    public boolean deposit(int amount) {
+        if (amount < 0) {
+            return false; 
+        }
+        balance += amount;
+        return true;
+    }
+
+   
+    public boolean withdraw(int amount) {
+        if (amount < 0) {
+            return false; 
+        }
+        if (balance - amount >= 0) {
+            balance -= amount;
+            return true;
+        } else {
+            return false; 
+        }
+    }
+
+    
+    
+    public String toString() {
+        return "account balance: " + balance + " kr.";
+    }   
+    }
+}
+
